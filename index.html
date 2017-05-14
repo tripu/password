@@ -3,11 +3,25 @@
 <meta charset='utf-8'>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+* {
+	box-sizing: border-box;
+}
+
 body {
 	font-family: sans-serif;
 	display: flex;
 	flex-flow: column;
 	align-items: center;
+}
+
+form,
+fieldset {
+	width: 100%;
+}
+
+legend,
+input {
+	display: inline;
 }
 
 #hash-word {
@@ -53,56 +67,51 @@ fieldset.size > ul {
 	<fieldset>
 		<legend>Site Tag</legend>
 		<input type=text id="site-tag" autofocus>
-	</fieldset>
-	<fieldset>
 		<legend>Master Key</legend>
 		<input id="master-key" type="password">
-	</fieldset>
-	<fieldset>
 		<legend>Hash Word</legend>
 		<input type=text id="hash-word">
+	</fieldset>
+	<fieldset>
 		<div class='buttons'>
 			<button type=button onclick='generatePassword(12)'>Short</button>
 			<button type=button onclick='generatePassword(26)'>Long</button>
+			<button type=button onclick='generatePassword(8)'>Unsafe 8 Character</button>
+			<button type=button onclick='generateCustomPassword()'>Generate Custom</button>
 		</div>
 	</fieldset>
-	<details>
-		<summary>More Options</summary>
-		<p><button type=button onclick='generatePassword(8)'>Unsafe 8 Character</button></p>
-		<p><button type=button onclick='generateCustomPassword()'>Generate Custom</button></p>
-		<fieldset>
-			<legend>Requirements</legend>
-			<ul>
-				<li><label><input type="checkbox" id="digit" checked> Digits</label></li>
-				<li><label><input type="checkbox" id="punctuation"> Punctuation</label></li>
-				<li><label><input type="checkbox" id="mixedCase" checked> Mixed Case</label></li>
-			</ul>
-		</fieldset>
-		<fieldset>
-			<legend>Restrictions</legend>
-			<ul>
-				<li><label><input type="checkbox" id="noSpecial"> No Special</label></li>
-				<li><label><input type="checkbox" id="digitsOnly"> Digits Only</label></li>
-			</ul>
-		</fieldset>
-		<fieldset class='size'>
-			<legend>Size</legend>
-			<ul>
-				<li><label><input type=radio name=size value=4> 4</label></li>
-				<li><label><input type=radio name=size value=6> 6</label></li>
-				<li><label><input type=radio name=size value=8 checked> 8</label></li>
-				<li><label><input type=radio name=size value=10> 10</label></li>
-				<li><label><input type=radio name=size value=12> 12</label></li>
-				<li><label><input type=radio name=size value=14> 14</label></li>
-				<li><label><input type=radio name=size value=16> 16</label></li>
-				<li><label><input type=radio name=size value=18> 18</label></li>
-				<li><label><input type=radio name=size value=20> 20</label></li>
-				<li><label><input type=radio name=size value=22> 22</label></li>
-				<li><label><input type=radio name=size value=24> 24</label></li>
-				<li><label><input type=radio name=size value=26> 26</label></li>
-			</ul>
-		</fieldset>
-	</details>
+	<fieldset>
+		<legend>Requirements</legend>
+		<ul>
+			<li><label><input type="checkbox" id="digit" checked> Digits</label></li>
+			<li><label><input type="checkbox" id="punctuation" checked> Punctuation</label></li>
+			<li><label><input type="checkbox" id="mixedCase" checked> Mixed Case</label></li>
+		</ul>
+	</fieldset>
+	<fieldset>
+		<legend>Restrictions</legend>
+		<ul>
+			<li><label><input type="checkbox" id="noSpecial"> No Special</label></li>
+			<li><label><input type="checkbox" id="digitsOnly"> Digits Only</label></li>
+		</ul>
+	</fieldset>
+	<fieldset class='size'>
+		<legend>Size</legend>
+		<ul>
+			<li><label><input type=radio name=size value=4> 4</label></li>
+			<li><label><input type=radio name=size value=6> 6</label></li>
+			<li><label><input type=radio name=size value=8> 8</label></li>
+			<li><label><input type=radio name=size value=10> 10</label></li>
+			<li><label><input type=radio name=size value=12> 12</label></li>
+			<li><label><input type=radio name=size value=14> 14</label></li>
+			<li><label><input type=radio name=size value=16> 16</label></li>
+			<li><label><input type=radio name=size value=18> 18</label></li>
+			<li><label><input type=radio name=size value=20> 20</label></li>
+			<li><label><input type=radio name=size value=22> 22</label></li>
+			<li><label><input type=radio name=size value=24 checked> 24</label></li>
+			<li><label><input type=radio name=size value=26> 26</label></li>
+		</ul>
+	</fieldset>
 </form>
 
 <script>
