@@ -1,17 +1,33 @@
-<!DOCTYPE HTML>
-<title>Password Hasher</title>
-<meta charset='utf-8'>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-	box-sizing: border-box;
-}
+<!DOCTYPE html>
+
+<html lang="en-GB" class="no-js">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Password hasher</title>
+    <meta name="application-name" content="Password hasher" />
+    <meta name="author" content="tabatkins, tripu" />
+    <meta name="description" content="https://github.com/tripu/password" />
+    <meta name="keywords" content="password,hash,tool,security" />
+
+    <style type="text/css">
+
+      * {
+        box-sizing: border-box;
+      }
+
+    </style>
+
+  </head>
+
+<!--
 
 body {
 	font-family: sans-serif;
-	display: flex;
 	flex-flow: column;
 	align-items: center;
+	font-size: 2rem;
 }
 
 form,
@@ -19,7 +35,6 @@ fieldset {
 	width: 100%;
 }
 
-legend,
 input {
 	display: inline;
 }
@@ -29,16 +44,10 @@ input {
 }
 
 fieldset {
-	border: none;
-	background: #eee;
-	margin-top: .5em;
 	display: flex;
+	border: none;
+	margin-top: .5em;
 	flex-flow: column;
-}
-
-legend {
-	background: #eee;
-	padding: 1px;
 }
 
 fieldset .buttons {
@@ -50,7 +59,8 @@ fieldset .buttons > button {
 	flex: 1 auto;
 }
 
-fieldset > ul {
+fieldset > * {
+	display: inline-block;
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -61,117 +71,89 @@ fieldset.size > ul {
 	-moz-columns: 2;
 	columns: 2;
 }
-</style>
 
-<form>
-	<fieldset>
-		<legend>Site Tag</legend>
-		<input type=text id="site-tag" autofocus>
-		<legend>Master Key</legend>
-		<input id="master-key" type="password">
-		<legend>Hash Word</legend>
-		<input type=text id="hash-word">
-	</fieldset>
-	<fieldset>
-		<div class='buttons'>
-			<button type=button onclick='generatePassword(12)'>Short</button>
-			<button type=button onclick='generatePassword(26)'>Long</button>
-			<button type=button onclick='generatePassword(8)'>Unsafe 8 Character</button>
-			<button type=button onclick='generateCustomPassword()'>Generate Custom</button>
-		</div>
-	</fieldset>
-	<fieldset>
-		<legend>Requirements</legend>
-		<ul>
-			<li><label><input type="checkbox" id="digit" checked> Digits</label></li>
-			<li><label><input type="checkbox" id="punctuation" checked> Punctuation</label></li>
-			<li><label><input type="checkbox" id="mixedCase" checked> Mixed Case</label></li>
-		</ul>
-	</fieldset>
-	<fieldset>
-		<legend>Restrictions</legend>
-		<ul>
-			<li><label><input type="checkbox" id="noSpecial"> No Special</label></li>
-			<li><label><input type="checkbox" id="digitsOnly"> Digits Only</label></li>
-		</ul>
-	</fieldset>
-	<fieldset class='size'>
-		<legend>Size</legend>
-		<ul>
-			<li><label><input type=radio name=size value=4> 4</label></li>
-			<li><label><input type=radio name=size value=6> 6</label></li>
-			<li><label><input type=radio name=size value=8> 8</label></li>
-			<li><label><input type=radio name=size value=10> 10</label></li>
-			<li><label><input type=radio name=size value=12> 12</label></li>
-			<li><label><input type=radio name=size value=14> 14</label></li>
-			<li><label><input type=radio name=size value=16> 16</label></li>
-			<li><label><input type=radio name=size value=18> 18</label></li>
-			<li><label><input type=radio name=size value=20> 20</label></li>
-			<li><label><input type=radio name=size value=22> 22</label></li>
-			<li><label><input type=radio name=size value=24 checked> 24</label></li>
-			<li><label><input type=radio name=size value=26> 26</label></li>
-		</ul>
-	</fieldset>
-</form>
+-->
 
-<script>
-function findAll(sel) { return [].slice.call(document.querySelectorAll(sel)); }
-function find(sel) { return document.querySelector(sel); }
+  <body>
 
-function validate(form) {
-	return find('#site-tag').value && find('#master-key').value;
-}
+    <form>
 
-function generatePassword(len) {
-	var hashword = find('#hash-word');
-	hashword.value = PassHashCommon.generateHashWord(
-		find('#site-tag').value,
-		find('#master-key').value,
-		len,true,false,true,true,false
-	);
-	hashword.select();
-	hashword.focus();
-}
+      <fieldset>
+        <label>Tag <input type=text id="site-tag" autofocus /></label>
+        <label>Master key <input type="password" id="master-key" /></label>
+        <label>Password <input type="text" id="hash-word" /></label>
+      </fieldset>
 
-function update() {
-	var noSpecial = find("#noSpecial").checked;
-	var digitsOnly = find("#digitsOnly").checked;
-	find('#punctuation').disabled = noSpecial || digitsOnly;
-	find("#digit"      ).disabled = digitsOnly;
-	find("#mixedCase"  ).disabled = digitsOnly;
-	find("#noSpecial"  ).disabled = digitsOnly;
-}
+      <fieldset>
+        <label><input type="checkbox" id="digitsOnly"> <strong>Digits only</strong></label>
+        <label><input type="checkbox" id="noSpecial"> <strong>No special</strong></label>
+        <label><input type="checkbox" id="digit" checked> Digits</label>
+        <label><input type="checkbox" id="punctuation" checked> Punctuation</label>
+        <label><input type="checkbox" id="mixedCase" checked> Mixed case</label>
+        <label><input id="size" type="number" min="4" max="1024" value="24" step="1" /> Size</label>
+      </fieldset>
 
-function generateCustomPassword() {
-	var siteTag   = find('#site-tag');
-	var masterKey = find('#master-key');
-	var hashWord  = find('#hash-word');
-	var submit    = find('#submit');
-	var requireDigit       = find("#digit").checked;
-	var requirePunctuation = find("#punctuation").checked;
-	var requireMixedCase   = find("#mixedCase").checked;
-	var restrictSpecial    = find("#noSpecial").checked;
-	var restrictDigits     = find("#digitsOnly").checked;
-	var hashWordSize = Number(find("input[name='size']:checked").value);
-	hashWord.value = PassHashCommon.generateHashWord(
-	                   siteTag.value,
-	                   masterKey.value,
-	                   hashWordSize,
-	                   requireDigit,
-	                   requirePunctuation,
-	                   requireMixedCase,
-	                   restrictSpecial,
-	                   restrictDigits);
-	hashWord.select();
-	hashWord.focus();
-}
+      <fieldset>
+        <div class='buttons'>
+          <button type=button onclick='generateCustomPassword()'>Generate Custom</button>
+        </div>
+      </fieldset>
 
-window.onload = function() {
-	findAll("input[type='radio'], input[type='checkbox']").forEach(function(el){
-		el.onclick = update;
-	});
-};
-</script>
+    </form>
+
+    <script type="text/javascript">
+
+      { 'use strict';
+
+        function findAll(sel) { return [].slice.call(document.querySelectorAll(sel)); }
+        function find(sel) { return document.querySelector(sel); }
+
+        function validate(form) {
+          return find('#site-tag').value && find('#master-key').value;
+        }
+
+        function update() {
+          var noSpecial = find("#noSpecial").checked;
+          var digitsOnly = find("#digitsOnly").checked;
+          find('#punctuation').disabled = noSpecial || digitsOnly;
+          find("#digit"      ).disabled = digitsOnly;
+          find("#mixedCase"  ).disabled = digitsOnly;
+          find("#noSpecial"  ).disabled = digitsOnly;
+        }
+
+        function generateCustomPassword() {
+          var siteTag   = find('#site-tag');
+          var masterKey = find('#master-key');
+          var hashWord  = find('#hash-word');
+          var submit    = find('#submit');
+          var requireDigit       = find("#digit").checked;
+          var requirePunctuation = find("#punctuation").checked;
+          var requireMixedCase   = find("#mixedCase").checked;
+          var restrictSpecial    = find("#noSpecial").checked;
+          var restrictDigits     = find("#digitsOnly").checked;
+          var hashWordSize = Number(find("#size").value);
+          hashWord.value = PassHashCommon.generateHashWord(
+            siteTag.value,
+            masterKey.value,
+            hashWordSize,
+            requireDigit,
+            requirePunctuation,
+            requireMixedCase,
+            restrictSpecial,
+            restrictDigits);
+          hashWord.select();
+          hashWord.focus();
+        }
+
+        window.onload = function() {
+          findAll("input[type='radio'], input[type='checkbox']").forEach(function(el){
+            el.onclick = update;
+          });
+        };
+
+      }
+
+    </script>
 
 <script>
 /*
@@ -574,4 +556,8 @@ var PassHashCommon =
 		},
 
 }
-</script>
+    </script>
+
+  </body>
+
+</html>
