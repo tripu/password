@@ -17,62 +17,13 @@
         box-sizing: border-box;
       }
 
+      fieldset {
+        border: none;
+      }
+
     </style>
 
   </head>
-
-<!--
-
-body {
-	font-family: sans-serif;
-	flex-flow: column;
-	align-items: center;
-	font-size: 2rem;
-}
-
-form,
-fieldset {
-	width: 100%;
-}
-
-input {
-	display: inline;
-}
-
-#hash-word {
-	font-family: monospace;
-}
-
-fieldset {
-	display: flex;
-	border: none;
-	margin-top: .5em;
-	flex-flow: column;
-}
-
-fieldset .buttons {
-	display: flex;
-	padding-top: .5em;
-}
-
-fieldset .buttons > button {
-	flex: 1 auto;
-}
-
-fieldset > * {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-fieldset.size > ul {
-	-webkit-columns: 2;
-	-moz-columns: 2;
-	columns: 2;
-}
-
--->
 
   <body>
 
@@ -81,7 +32,7 @@ fieldset.size > ul {
       <fieldset>
         <label>Tag <input type=text id="site-tag" autofocus /></label>
         <label>Master key <input type="password" id="master-key" /></label>
-        <label>Password <input type="text" id="hash-word" /></label>
+        <label>Password <input type="text" id="hash-word" readonly="readonly" /></label>
       </fieldset>
 
       <fieldset>
@@ -148,6 +99,10 @@ fieldset.size > ul {
         window.onload = function() {
           findAll("input[type='radio'], input[type='checkbox']").forEach(function(el){
             el.onclick = update;
+          });
+          find('form').addEventListener('keydown', function (e) {
+            if ('Enter' === e.key)
+              generateCustomPassword();
           });
         };
 
