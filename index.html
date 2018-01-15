@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Password hasher</title>
     <meta name="application-name" content="Password hasher" />
-    <meta name="author" content="tabatkins, tripu" />
+    <meta name="author" content="tabatkins,tripu" />
     <meta name="description" content="https://github.com/tripu/password" />
     <meta name="keywords" content="password,hash,tool,security" />
 
@@ -15,10 +15,64 @@
 
       * {
         box-sizing: border-box;
+        margin: 0;
+        border: 0;
+        padding: 0;
+        font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Trebuchet MS', Helvetica, Verdana, Geneva, Calibri, sans-serif;
+        color: #000000;
+      }
+
+      body, body * {
+        font-size: 1.5rem;
+      }
+
+      *:disabled {
+        alpha: .5;
+      }
+
+      main {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgb(224,224,224) 0%,rgb(255,255,255) 25%,rgb(255,255,255) 75%,rgb(224,224,224) 100%);
+      }
+
+      form {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 1rem;
+        text-align: center;
       }
 
       fieldset {
-        border: none;
+      }
+
+      label, input {
+        vertical-align: baseline;
+      }
+
+      input {
+        border: 1px solid #808080;
+        padding: .2rem;
+        font-size: 1.25rem;
+        font-family: 'Source Code Pro', 'Source Code', Inconsolata, Consolas, monospace;
+        background-color: #ffffff;
+      }
+
+      button {
+        border-width: .1rem;
+        border-style: solid;
+        border-color: #ffffff #c0c0c0 #a0a0a0 #e0e0e0;
+        padding: .25rem 1rem;
+        font-size: 1.25rem;
+        font-family: 'Source Code Pro', 'Source Code', Inconsolata, Consolas, monospace;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      }
+
+      button:hover, button:active, button:focus {
+        border-width: 2px;
       }
 
     </style>
@@ -27,30 +81,53 @@
 
   <body>
 
-    <form>
+    <main>
 
-      <fieldset>
-        <label>Tag <input type=text id="site-tag" autofocus /></label>
-        <label>Master key <input type="password" id="master-key" /></label>
-        <label>Password <input type="text" id="hash-word" readonly="readonly" /></label>
-      </fieldset>
-
-      <fieldset>
-        <label><input type="checkbox" id="digitsOnly"> <strong>Digits only</strong></label>
-        <label><input type="checkbox" id="noSpecial"> <strong>No special</strong></label>
-        <label><input type="checkbox" id="digit" checked> Digits</label>
-        <label><input type="checkbox" id="punctuation" checked> Punctuation</label>
-        <label><input type="checkbox" id="mixedCase" checked> Mixed case</label>
-        <label><input id="size" type="number" min="4" max="1024" value="24" step="1" /> Size</label>
-      </fieldset>
-
-      <fieldset>
-        <div class='buttons'>
+      <form>
+        <fieldset>
+          <div>
+            <label for="site-tag">Tag</label>
+            <input type=text id="site-tag" placeholder="twitter, facebook&hellip;" autofocus />
+          </div>
+          <div>
+            <label for="master-key">Master key</label>
+            <input type="password" id="master-key" placeholder="s3kretPazzw0rd" />
+          </div>
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" id="digitsOnly" />
+          <label for="digitsOnly"><strong>Digits only</strong></label>
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" id="noSpecial" />
+          <label for="noSpecial"><strong>No special</strong></label>
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" id="digit" checked />
+          <label for="digit">Digits</label>
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" id="punctuation" checked />
+          <label for="punctuation">Punctuation</label>
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" id="mixedCase" checked />
+          <label for="mixedCase">Mixed case</label>
+        </fieldset>
+        <fieldset>
+          <input id="size" type="number" min="4" max="1024" value="24" step="1" />
+          <label for="size">Size</label>
+        </fieldset>
+        <fieldset>
           <button type=button onclick='generateCustomPassword()'>Generate Custom</button>
-        </div>
-      </fieldset>
+        </fieldset>
+        <fieldset>
+          <label for="hash-word">Password</label>
+          <input type="text" id="hash-word" readonly="readonly" />
+        </fieldset>
+      </form>
 
-    </form>
+    </main>
 
     <script type="text/javascript">
 
