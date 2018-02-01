@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Password hasher</title>
     <meta name="application-name" content="Password hasher" />
-    <meta name="author" content="tabatkins, tripu" />
+    <meta name="author" content="tabatkins,tripu" />
     <meta name="description" content="https://github.com/tripu/password" />
     <meta name="keywords" content="password,hash,tool,security" />
 
@@ -15,10 +15,127 @@
 
       * {
         box-sizing: border-box;
+        margin: 0;
+        border: 0;
+        padding: 0;
+        font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Trebuchet MS', Helvetica, Verdana, Geneva, Calibri, sans-serif;
+        color: #404040;
       }
 
-      fieldset {
-        border: none;
+      body, body * {
+        font-size: 1.25rem;
+      }
+
+      main {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgb(224,240,255) 0%,rgb(255,255,255) 25%,rgb(255,255,255) 75%,rgb(224,240,255) 100%);
+      }
+
+      form {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 90%;
+        max-width: 40rem;
+        margin: 1rem auto;
+        text-align: center;
+      }
+
+      fieldset:not(:last-child):not(.close), button {
+        margin-bottom: 2rem;
+      }
+
+      fieldset.close {
+        line-height: 2;
+      }
+
+      fieldset, button {
+        text-align: center;
+      }
+
+      fieldset.aligned {
+        text-align: right;
+      }
+
+      fieldset.inline {
+        line-height: 2;
+      }
+
+      div {
+        display: block;
+      }
+
+      fieldset:not(.aligned) div {
+        display: inline-block;
+      }
+
+      fieldset.aligned div:not(:last-child) {
+        margin-bottom: .5rem;
+      }
+
+      label, input {
+        vertical-align: middle;
+      }
+
+      label, button {
+        cursor: pointer;
+      }
+
+      label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      fieldset label {
+        padding-left: .25rem;
+      }
+
+      fieldset div:not(:last-child) label {
+        padding-right: 2rem;
+      }
+
+      fieldset.aligned label {
+        display: inline-block;
+        width: 33%;
+        padding: 0 .5rem 0 0;
+        max-width: 30%;
+      }
+
+      input {
+        border: 1px solid #808080;
+        padding: .2rem;
+        font-size: 1.25rem;
+        font-family: 'Source Code Pro', 'Source Code', Inconsolata, Consolas, monospace;
+        background-color: #ffffff;
+      }
+
+      input[type="text"], input[type="number"], input[type="password"] {
+        outline: none;
+      }
+
+      input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus,
+      input[type="text"]:active, input[type="number"]:active, input[type="password"]:active,
+      input[type="text"]:hover, input[type="number"]:hover, input[type="password"]:hover {
+        outline: 2px black solid;
+      }
+
+      fieldset.aligned input {
+        width: 67%;
+      }
+
+      button {
+        border-width: .1rem;
+        border-style: solid;
+        border-color: #e0e0e0 #a0a0a0 #808080 #c0c0c0;
+        padding: .25rem 1rem;
+        background-color: #e0e0e0;
+      }
+
+      button:hover, button:active, button:focus {
+        border-color: #ffffff #c0c0c0 #a0a0a0 #e0e0e0;
+        background-color: #f0f0f0;
       }
 
     </style>
@@ -27,30 +144,57 @@
 
   <body>
 
-    <form>
+    <main>
 
-      <fieldset>
-        <label>Tag <input type=text id="site-tag" autofocus /></label>
-        <label>Master key <input type="password" id="master-key" /></label>
-        <label>Password <input type="text" id="hash-word" readonly="readonly" /></label>
-      </fieldset>
+      <form>
+        <fieldset class="aligned">
+          <div>
+            <label for="site-tag">Tag</label>
+            <input type=text id="site-tag" placeholder="twitter" autofocus />
+          </div>
+          <div>
+            <label for="master-key">Master&nbsp;key</label>
+            <input type="password" id="master-key" placeholder="zecretPassw0rd" />
+          </div>
+        </fieldset>
+        <fieldset class="close">
+          <div>
+            <input type="checkbox" id="digitsOnly" />
+            <label for="digitsOnly"><strong>Digits only</strong></label>
+          </div>
+          <div>
+            <input type="checkbox" id="noSpecial" />
+            <label for="noSpecial"><strong>No special</strong></label>
+          </div>
+        </fieldset>
+        <fieldset class="inline">
+          <div>
+            <input type="checkbox" id="digit" checked />
+            <label for="digit">Digits</label>
+          </div>
+          <div>
+            <input type="checkbox" id="punctuation" checked />
+            <label for="punctuation">Punctuation</label>
+          </div>
+          <div>
+            <input type="checkbox" id="mixedCase" checked />
+            <label for="mixedCase">Mixed case</label>
+          </div>
+          <div>
+            <label for="size" class="size">Size</label>
+            <input id="size" type="number" min="4" max="1024" value="24" step="1" />
+          </div>
+        </fieldset>
+        <button type=button onclick='generateCustomPassword()'>Generate&nbsp;password</button>
+        <fieldset class="aligned">
+          <div>
+            <label for="hash-word">Password</label>
+            <input type="text" id="hash-word" readonly="readonly" />
+          </div>
+        </fieldset>
+      </form>
 
-      <fieldset>
-        <label><input type="checkbox" id="digitsOnly"> <strong>Digits only</strong></label>
-        <label><input type="checkbox" id="noSpecial"> <strong>No special</strong></label>
-        <label><input type="checkbox" id="digit" checked> Digits</label>
-        <label><input type="checkbox" id="punctuation" checked> Punctuation</label>
-        <label><input type="checkbox" id="mixedCase" checked> Mixed case</label>
-        <label><input id="size" type="number" min="4" max="1024" value="24" step="1" /> Size</label>
-      </fieldset>
-
-      <fieldset>
-        <div class='buttons'>
-          <button type=button onclick='generateCustomPassword()'>Generate Custom</button>
-        </div>
-      </fieldset>
-
-    </form>
+    </main>
 
     <script type="text/javascript">
 
