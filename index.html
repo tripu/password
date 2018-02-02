@@ -79,13 +79,14 @@
         vertical-align: middle;
       }
 
-      label, button {
+      label, button:not(:disabled) {
         cursor: pointer;
       }
 
       label {
         overflow: hidden;
         text-overflow: ellipsis;
+        transition: color .25s linear;
       }
 
       fieldset label {
@@ -111,14 +112,14 @@
         background-color: #ffffff;
       }
 
-      input[type="text"], input[type="number"], input[type="password"] {
+      input[type="text"], input[type="number"], input[type="password"], button {
         outline: none;
       }
 
-      input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus,
-      input[type="text"]:active, input[type="number"]:active, input[type="password"]:active,
-      input[type="text"]:hover, input[type="number"]:hover, input[type="password"]:hover {
-        outline: 2px black solid;
+      input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus, button:focus,
+      input[type="text"]:active, input[type="number"]:active, input[type="password"]:active, button:active,
+      input[type="text"]:hover, input[type="number"]:hover, input[type="password"]:hover, button:hover {
+        outline: 1px solid #000000;
       }
 
       fieldset.aligned input {
@@ -128,13 +129,18 @@
       button {
         border-width: .1rem;
         border-style: solid;
-        border-color: #e0e0e0 #a0a0a0 #808080 #c0c0c0;
+        border-color: #f0f0f0 #d0d0d0 #d0d0d0 #f0f0f0;
         padding: .25rem 1rem;
         background-color: #e0e0e0;
       }
 
-      button:hover, button:active, button:focus {
-        border-color: #ffffff #c0c0c0 #a0a0a0 #e0e0e0;
+      button:disabled {
+        border-color: #d0d0d0 #f0f0f0 #f0f0f0 #d0d0d0;
+        color: #808080;
+      }
+
+      button:not(:disabled):hover, button:not(:disabled):active, button:not(:disabled):focus {
+        border-color: #f8f8f8 #c8c8c8 #c8c8c8 #f8f8f8;
         background-color: #f0f0f0;
       }
 
@@ -185,7 +191,7 @@
             <input id="size" type="number" min="4" max="1024" value="24" step="1" />
           </div>
         </fieldset>
-        <button type=button onclick='generateCustomPassword()'>Generate&nbsp;password</button>
+        <button id="generate" type=button onclick='generateCustomPassword()' disabled>Generate&nbsp;password</button>
         <fieldset class="aligned">
           <div>
             <label for="hash-word">Password</label>
@@ -207,16 +213,55 @@
           return find('#site-tag').value && find('#master-key').value;
         }
 
-        function update() {
-          var noSpecial = find("#noSpecial").checked;
-          var digitsOnly = find("#digitsOnly").checked;
-          find('#punctuation').disabled = noSpecial || digitsOnly;
-          find("#digit"      ).disabled = digitsOnly;
-          find("#mixedCase"  ).disabled = digitsOnly;
-          find("#noSpecial"  ).disabled = digitsOnly;
+        function checkReady() {
+          var siteTag = find('#site-tag'),
+            masterKey = find('#master-key'),
+            button = find('#generate'),
+            enabled = (siteTag.value && siteTag.value.length > 0 && masterKey.value && masterKey.value.length > 0);
+          button.disabled = !enabled;
+          return enabled;
+        }
+
+        function update(event) {
+          var digitsOnly = find('#digitsOnly'),
+            noSpecial = find('#noSpecial'),
+            digit = find('#digit'),
+            punctuation = find('#punctuation'),
+            mixedCase = find('#mixedCase');
+          if (digitsOnly.checked) {
+            noSpecial.disabled = digit.disabled = punctuation.disabled = mixedCase.disabled = true;
+            noSpecial.checked = punctuation.checked = mixedCase.checked = false;
+            digit.checked = true;
+          } else {
+            noSpecial.disabled = digit.disabled = mixedCase.disabled = false;
+            if (event && event.target && 'digitsOnly' === event.target.id) {
+              punctuation.disabled = false;
+              noSpecial.checked = false;
+              digit.checked = punctuation.checked = mixedCase.checked = true;
+            } else {
+              if (noSpecial.checked) {
+                punctuation.disabled = true;
+                punctuation.checked = false;
+              } else {
+                punctuation.disabled = false;
+                if (event && event.target && 'noSpecial' === event.target.id)
+                  punctuation.checked = true;
+              }
+            }
+          }
+          findAll('input[type="checkbox"]:not(:disabled)').forEach(function (element) {
+            if (element && element.parentElement && element.parentElement.children && element.parentElement.children.length > 1)
+              element.parentElement.children[1].style.color = '#404040';
+          });
+          findAll('input[type="checkbox"]:disabled').forEach(function (element) {
+            if (element && element.parentElement && element.parentElement.children && element.parentElement.children.length > 1)
+              element.parentElement.children[1].style.color = '#c0c0c0';
+          });
         }
 
         function generateCustomPassword() {
+          if (!checkReady())
+            return;
           var siteTag   = find('#site-tag');
           var masterKey = find('#master-key');
           var hashWord  = find('#hash-word');
@@ -241,6 +286,9 @@
         }
 
         window.onload = function() {
+          findAll('input[type="text"], input[type="password"]').forEach(function (element) {
+            element.onkeyup = checkReady;
+          });
           findAll("input[type='radio'], input[type='checkbox']").forEach(function(el){
             el.onclick = update;
           });
