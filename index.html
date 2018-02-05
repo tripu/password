@@ -209,15 +209,95 @@
         function findAll(sel) { return [].slice.call(document.querySelectorAll(sel)); }
         function find(sel) { return document.querySelector(sel); }
 
-        function validate(form) {
-          return find('#site-tag').value && find('#master-key').value;
+        function populateForm() {
+          var tag = find('#site-tag'),
+            masterKey = find('#master-key'),
+            digitsOnly = find('#digitsOnly'),
+            noSpecial = find('#noSpecial'),
+            digit = find('#digit'),
+            punctuation = find('#punctuation'),
+            mixedCase = find('#mixedCase'),
+            size = find('#size'),
+            url = new URL(window.location.href),
+            params = url.searchParams;
+          if (params.has('s')) {
+            var s = parseInt(params.get('s'));
+            if (isNaN(s) || s < 4 || s > 1024)
+              throw new Error('Parameter "s" has an invalid value or is out of bounds.');
+            else {
+              size.value = s;
+              params.delete('s');
+            }
+          }
+          if (params.has('mc')) {
+            var mc = params.get('mc');
+            if ('0' !== mc && '1' !== mc)
+              throw new Error('Parameter "mc" has an invalid value.');
+            else {
+              mixedCase.checked = '1' === mc;
+              params.delete('mc');
+            }
+          }
+          if (params.has('p')) {
+            var p = params.get('p');
+            if ('0' !== p && '1' !== p)
+              throw new Error('Parameter "p" has an invalid value.');
+            else {
+              punctuation.checked = '1' === p;
+              params.delete('p');
+            }
+          }
+          if (params.has('d')) {
+            var d = params.get('d');
+            if ('0' !== d && '1' !== d)
+              throw new Error('Parameter "d" has an invalid value.');
+            else {
+              digit.checked = '1' === d;
+              params.delete('d');
+            }
+          }
+          if (params.has('ns')) {
+            var ns = params.get('ns');
+            if ('0' !== ns && '1' !== ns)
+              throw new Error('Parameter "ns" has an invalid value.');
+            else {
+              noSpecial.checked = '1' === ns;
+              params.delete('ns');
+            }
+          }
+          if (params.has('do')) {
+            var donly = params.get('do');
+            if ('0' !== donly && '1' !== donly)
+              throw new Error('Parameter "do" has an invalid value.');
+            else {
+              digitsOnly.checked = '1' === donly;
+              params.delete('do');
+            }
+          }
+          if (params.has('t')) {
+            var t = params.get('t');
+            if (!t)
+              throw new Error('Parameter "t" has an invalid value.');
+            else {
+              tag.value = t;
+              setTimeout(function() {
+                masterKey.select();
+                masterKey.focus();
+              }, 500);
+              params.delete('t');
+            }
+          }
+          if ('' == params)
+            update();
+          else
+            throw new Error('These parameters are not valid: "' + params + '"');
         }
 
         function checkReady() {
           var siteTag = find('#site-tag'),
             masterKey = find('#master-key'),
             button = find('#generate'),
-            enabled = (siteTag.value && siteTag.value.length > 0 && masterKey.value && masterKey.value.length > 0);
+            enabled = siteTag.value && masterKey.value;
           button.disabled = !enabled;
           return enabled;
         }
@@ -286,6 +366,14 @@
         }
 
         window.onload = function() {
+          try {
+            populateForm();
+          } catch (e) {
+            if (e) {
+              alert(e);
+              window.location.href = window.location.pathname;
+            }
+          }
           findAll('input[type="text"], input[type="password"]').forEach(function (element) {
             element.onkeyup = checkReady;
           });
