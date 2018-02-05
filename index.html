@@ -22,10 +22,6 @@
         color: #404040;
       }
 
-      body, body * {
-        font-size: 1.25rem;
-      }
-
       main {
         position: absolute;
         width: 100%;
@@ -44,11 +40,11 @@
       }
 
       fieldset:not(:last-child):not(.close), button {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
       }
 
-      fieldset.close {
-        line-height: 2;
+      fieldset.close, fieldset.inline {
+        line-height: 1.5;
       }
 
       fieldset, button {
@@ -57,10 +53,6 @@
 
       fieldset.aligned {
         text-align: right;
-      }
-
-      fieldset.inline {
-        line-height: 2;
       }
 
       div {
@@ -72,11 +64,15 @@
       }
 
       fieldset.aligned div:not(:last-child) {
-        margin-bottom: .5rem;
+        margin-bottom: .25rem;
       }
 
       label, input {
         vertical-align: middle;
+      }
+
+      fieldset.close label, fieldset.close input, fieldset.inline label, fieldset.inline input {
+        vertical-align: baseline;
       }
 
       label, button:not(:disabled) {
@@ -93,7 +89,7 @@
         padding-left: .25rem;
       }
 
-      fieldset div:not(:last-child) label {
+      fieldset.close div:not(:last-child) label, fieldset.inline div:not(:last-child) label {
         padding-right: 2rem;
       }
 
@@ -144,6 +140,18 @@
         background-color: #f0f0f0;
       }
 
+      @media (min-width: 576px) {
+        body, body * {
+          font-size: 1.25rem;
+        }
+        fieldset:not(:last-child):not(.close), button {
+          margin-bottom: 2rem;
+        }
+        fieldset.aligned div:not(:last-child) {
+          margin-bottom: .5rem;
+        }
+      }
+
     </style>
 
   </head>
@@ -166,29 +174,34 @@
         <fieldset class="close">
           <div>
             <input type="checkbox" id="digitsOnly" />
-            <label for="digitsOnly"><strong>Digits only</strong></label>
+            <label for="digitsOnly"><strong>Digits&nbsp;only</strong></label>
           </div>
           <div>
             <input type="checkbox" id="noSpecial" />
-            <label for="noSpecial"><strong>No special</strong></label>
+            <label for="noSpecial"><strong>No&nbsp;special</strong></label>
+          </div>
+        </fieldset>
+        <fieldset class="close">
+          <div>
+            <label for="digit">Ensure:</label>
+          </div>
+          <div>
+            <input type="checkbox" id="digit" checked />
+            <label for="digit">digits</label>
+          </div>
+          <div>
+            <input type="checkbox" id="punctuation" checked />
+            <label for="punctuation">punctuation</label>
+          </div>
+          <div>
+            <input type="checkbox" id="mixedCase" checked />
+            <label for="mixedCase">mixed&nbsp;case</label>
           </div>
         </fieldset>
         <fieldset class="inline">
           <div>
-            <input type="checkbox" id="digit" checked />
-            <label for="digit">Digits</label>
-          </div>
-          <div>
-            <input type="checkbox" id="punctuation" checked />
-            <label for="punctuation">Punctuation</label>
-          </div>
-          <div>
-            <input type="checkbox" id="mixedCase" checked />
-            <label for="mixedCase">Mixed case</label>
-          </div>
-          <div>
             <label for="size" class="size">Size</label>
-            <input id="size" type="number" min="4" max="1024" value="24" step="1" />
+            <input id="size" type="number" min="4" max="26" value="24" step="1" />
           </div>
         </fieldset>
         <button id="generate" type=button onclick='generateCustomPassword()' disabled>Generate&nbsp;password</button>
@@ -222,7 +235,7 @@
             params = url.searchParams;
           if (params.has('s')) {
             var s = parseInt(params.get('s'));
-            if (isNaN(s) || s < 4 || s > 1024)
+            if (isNaN(s) || s < 4 || s > 26)
               throw new Error('Parameter "s" has an invalid value or is out of bounds.');
             else {
               size.value = s;
