@@ -160,11 +160,11 @@
 
     <main>
 
-      <form>
+      <form onsubmit="return generateCustomPassword(event)">
         <fieldset class="aligned">
           <div>
             <label for="site-tag">Tag</label>
-            <input type=text id="site-tag" placeholder="twitter" autofocus />
+            <input type=text id="site-tag" placeholder="twitter" autofocus autocomplete="on" name="Zae7Emie" />
           </div>
           <div>
             <label for="master-key">Master&nbsp;key</label>
@@ -204,7 +204,7 @@
             <input id="size" type="number" min="4" max="26" value="26" step="1" />
           </div>
         </fieldset>
-        <button id="generate" type=button onclick='generateCustomPassword()' disabled>Generate&nbsp;password</button>
+        <button id="generate" type="submit" disabled>Generate&nbsp;password</button>
         <fieldset class="aligned">
           <div>
             <label for="hash-word">Password</label>
@@ -352,13 +352,14 @@
           });
         }
 
-        function generateCustomPassword() {
+        function generateCustomPassword(e) {
+          if (e && e.preventDefault)
+            e.preventDefault();
           if (!checkReady())
             return;
           var siteTag   = find('#site-tag');
           var masterKey = find('#master-key');
           var hashWord  = find('#hash-word');
-          var submit    = find('#submit');
           var requireDigit       = find("#digit").checked;
           var requirePunctuation = find("#punctuation").checked;
           var requireMixedCase   = find("#mixedCase").checked;
@@ -376,6 +377,7 @@
             restrictDigits);
           hashWord.select();
           hashWord.focus();
+          return false;
         }
 
         window.onload = function() {
